@@ -6,7 +6,7 @@ use Carp;
 
 use SVN::Dump::Reader;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new {
     my ( $class, $args ) = @_;
@@ -16,11 +16,11 @@ sub new {
 
     # we have a reader
     if ( exists $args->{fh} || exists $args->{file} ) {
-        my $fh = $args->{fh};
+        my ( $fh, $file ) = delete @{$args}{qw( fh file )};
         if ( !$fh ) {
-            open $fh, $args->{file} or croak "Can't open $args->{file}: $!";
+            open $fh, $file or croak "Can't open $file: $!";
         }
-        $self->{reader} = SVN::Dump::Reader->new($fh);
+        $self->{reader} = SVN::Dump::Reader->new( $fh, $args );
     }
     # we don't have a reader
     else {
@@ -96,7 +96,7 @@ SVN::Dump - A Perl interface to Subversion dumps
     my %kind;
     while ( my $record = $dump->next_record() ) {
         $type{ $record->type() }++;
-        $kind{ $record->get_headers()->{'Node-action'} }++
+        $kind{ $record->get_header('Node-action') }++
             if $record->type() eq 'node';
     }
     
@@ -171,6 +171,9 @@ If the C<SVN::Dump> object will read information from a file,
 the arguments C<file> is used (as usal, C<-> means C<STDIN>);
 if the dump is read from a filehandle, C<fh> is used.
 
+Extra options will be passed to the C<SVN::Dump::Reader> object
+that is created.
+
 If the C<SVN::Dump> isn't used to read information, the parameters
 C<version> and C<uuid> can be used to initialise the values
 of the C<SVN-fs-dump-format-version> and C<UUID> headers.
@@ -203,9 +206,14 @@ Return a string representation of the dump specific blocks
 
 C<SVN::Dump::Reader>, C<SVN::Dump::Record>.
 
-=head1 COPYRIGHT & LICENSE
+The reference document for Subversion dumpfiles is at:
+L<http://svn.apache.org/repos/asf/subversion/trunk/notes/dump-load-format.txt>
 
-Copyright 2006 Philippe 'BooK' Bruhat, All Rights Reserved.
+=head1 COPYRIGHT
+
+Copyright 2006-2011 Philippe Bruhat (BooK), All Rights Reserved.
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

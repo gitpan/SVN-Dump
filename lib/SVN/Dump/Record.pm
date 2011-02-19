@@ -87,7 +87,8 @@ sub update_headers {
 
     $self->set_header( 'Text-content-length' => $textlen )
         if defined $self->get_text_block();
-    $self->set_header( 'Prop-content-length', $proplen );
+    $self->set_header( 'Prop-content-length', $proplen )
+        if $proplen;
     $self->set_header( 'Content-length' => $proplen + $textlen );
 }
 
@@ -153,7 +154,7 @@ SVN::Dump::Record - A SVN dump record
 
 =head1 SYNOPSIS
 
-    # SVN::Dump::Record objects are returns by the next_record()
+    # SVN::Dump::Record objects are returned by the next_record()
     # method of SVN::Dump
 
 =head1 DESCRIPTION
@@ -343,9 +344,11 @@ any modification of the record.
 
 C<SVN::Dump::Headers>, C<SVN::Dump::Property>, C<SVN::Dump::Text>.
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHT
 
-Copyright 2006 Philippe 'BooK' Bruhat, All Rights Reserved.
+Copyright 2006-2011 Philippe 'BooK' Bruhat, All Rights Reserved.
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

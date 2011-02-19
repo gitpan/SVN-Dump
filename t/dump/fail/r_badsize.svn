@@ -1,12 +1,12 @@
 read_record
-^md5 checksum mismatch: got 60262fd14bd1b59416820cc37e4ee982, expected 6772871c2cf5bcf281c5ee148135a2db
+^Inconsistent record size
 Node-path: trunk/loremipsum.txt
 Node-kind: file
 Node-action: add
 Prop-content-length: 40
 Text-content-length: 1090
-Text-content-md5: 6772871c2cf5bcf281c5ee148135a2db
-Content-length: 1130
+Text-content-md5: 60262fd14bd1b59416820cc37e4ee982
+Content-length: 1100
 
 K 13
 svn:eol-style

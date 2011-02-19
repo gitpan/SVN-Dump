@@ -36,9 +36,11 @@ my %headers = (
             Prop-delta
             Prop-content-length
             Text-copy-source-md5
+            Text-copy-source-sha1
             Text-delta
             Text-content-length
             Text-content-md5
+            Text-content-sha1
             Content-length
             )
     ],
@@ -102,9 +104,12 @@ SVN::Dump::Headers - Headers of a SVN dump record
 
 =head1 SYNOPSIS
 
+    # SVN::Dump::Headers objects are returned by the read_header_block()
+    # method of SVN::Dump::Reader
+
 =head1 DESCRIPTION
 
-An C<SVN::Dump::Headers> object represents the headers of a
+A C<SVN::Dump::Headers> object represents the headers of a
 SVN dump record.
 
 =head1 METHODS
@@ -161,9 +166,11 @@ use the C<set_header()> and C<get_header()> methods of the record object.
 
 C<SVN::Dump::Record>.
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHT
 
-Copyright 2006 Philippe 'BooK' Bruhat, All Rights Reserved.
+Copyright 2006-2011 Philippe 'BooK' Bruhat, All Rights Reserved.
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
