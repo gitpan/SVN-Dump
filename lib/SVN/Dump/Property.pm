@@ -63,7 +63,7 @@ SVN::Dump::Property - A property block from a svn dump
  
 =head1 DESCRIPTION
 
-The C<SVN::Dump::Property> class represents a property block in a svn
+The SVN::Dump::Property class represents a property block in a svn
 dump.
 
 =head1 METHODS
@@ -104,12 +104,15 @@ Return a string representation of the property block.
 
 =head1 SEE ALSO
 
-=head1 COPYRIGHT & LICENSE
+L<SVN::Dump>, L<SVN::Dump::Record>.
 
-Copyright 2006 Philippe 'BooK' Bruhat, All Rights Reserved.
+=head1 COPYRIGHT
+
+Copyright 2006-2013 Philippe Bruhat (BooK), All Rights Reserved.
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

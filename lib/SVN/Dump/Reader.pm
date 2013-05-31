@@ -133,18 +133,14 @@ sub read_property_block {
 
         # read a key/value pair
         if( $line =~ /\AK (\d+)\z/ ) {
-            my $key = '';
-            $key .= <$fh> while length($key) < $1;
-            chop $key; # remove the last $NL
+            my $key = $fh->_read_string( $1 );
 
             $line = <$fh>;
             croak _eof() if !defined $line;
             chop $line;
          
             if( $line =~ /\AV (\d+)\z/ ) {
-                my $value = '';
-                $value .= <$fh> while length($value) <= $1;
-                chop $value; # remove the last $NL
+                my $value = $fh->_read_string( $1 );
 
                 $property->set( $key => $value );
 
@@ -157,9 +153,7 @@ sub read_property_block {
         # or a deleted key (only with fs-format-version >= 3)
         # FIXME shall we fail if fs-format-version < 3?
         elsif( $line =~ /\AD (\d+)\z/ ) {
-            my $key = '';
-            $key .= <$fh> while length($key) < $1;
-            chop $key; # remove the last $NL
+            my $key = $fh->_read_string( $1 );
             
             $property->set( $key => undef ); # undef means deleted
         }
@@ -179,20 +173,31 @@ sub read_property_block {
 sub read_text_block {
     my ($fh, $size) = @_;
 
+    return SVN::Dump::Text->new( $fh->_read_string( $size ) );
+}
+
+sub _read_string {
+
+    my ( $fh, $size ) = @_;
+
     local $/ = $NL;
 
-    my $text = '';
-    while( length($text) <= $size ) {
-        my $line = <$fh>;
-        croak _eof() if ! defined $line;
-        $text .= $line;
-    }
+    my $text;
+    my $characters_read = read( $fh, $text, $size );
 
-    # remove extra $NL
-    chop $text while length($text) > $size;
+    if ( defined($characters_read) ) {
+        if ( $characters_read != $size ) {
+            croak _eof();
+        };
+    } else {
+        croak $!;
+    };
 
-    return SVN::Dump::Text->new( $text );
-}
+    <$fh>; # clear trailing newline
+
+    return $text;
+
+};
 
 # FIXME make this more explicit
 sub _eof { return "Unexpected EOF line $.", }
@@ -213,7 +218,7 @@ SVN::Dump::Reader - A Subversion dump reader
 
 =head1 DESCRIPTION
 
-The C<SVN::Dump::Reader> class implements a reader object for Subversion
+The SVN::Dump::Reader class implements a reader object for Subversion
 dumps.
 
 =head1 METHODS
@@ -224,32 +229,32 @@ The following methods are available:
 
 =item new( $fh, \%options )
 
-Create a new C<SVN::Dump::Reader> attached to the C<$fh> filehandle.
+Create a new SVN::Dump::Reader attached to the C<$fh> filehandle.
 
 The only supported option is C<check_digest>, which is disabled
 by default.
 
 =item read_record( )
 
-Read and return a new S<SVN::Dump::Record> object from the dump filehandle.
+Read and return a new L<SVN::Dump::Record> object from the dump filehandle.
 
 If the option C<check_digest> is enabled, this method will recompute
 the digests for a dump without deltas, based on the information in the
 C<Text-content-md5> and C<Text-content-sha1> headers (if the corresponding
-C<Digest::> module is availabled). In case of a mismatch, the routine
+L<Digest> module is availabled). In case of a mismatch, the routine
 will C<die()> with an exception complaining about a C<checksum mismatch>.
 
 =item read_header_block( )
 
-Read and return a new S<SVN::Dump::Headers> object from the dump filehandle.
+Read and return a new L<SVN::Dump::Headers> object from the dump filehandle.
 
 =item read_property_block( )
 
-Read and return a new S<SVN::Dump::Property> object from the dump filehandle.
+Read and return a new L<SVN::Dump::Property> object from the dump filehandle.
 
 =item read_text_block( )
 
-Read and return a new S<SVN::Dump::Text> object from the dump filehandle.
+Read and return a new L<SVN::Dump::Text> object from the dump filehandle.
 
 =back
 
@@ -258,12 +263,12 @@ data from a stream.
 
 =head1 SEE ALSO
 
-L<SVN::Dump>, L<SVN::Dump::Headers>, L<SVN::Dump::Property>,
+L<SVN::Dump>, L<SVN::Dump::Record>, L<SVN::Dump::Headers>, L<SVN::Dump::Property>,
 L<SVN::Dump::Text>.
 
 =head1 COPYRIGHT
 
-Copyright 2006-2011 Philippe 'BooK' Bruhat, All Rights Reserved.
+Copyright 2006-2013 Philippe Bruhat (BooK), All Rights Reserved.
 
 =head1 LICENSE
 
@@ -271,4 +276,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-

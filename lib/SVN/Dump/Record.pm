@@ -159,11 +159,11 @@ SVN::Dump::Record - A SVN dump record
 
 =head1 DESCRIPTION
 
-An C<SVN::Dump::Record> object represents a Subversion dump record.
+An SVN::Dump::Record object represents a Subversion dump record.
 
 =head1 METHODS
 
-C<SVN::Dump> provides the following gourps of methods:
+L<SVN::Dump> provides the following gourps of methods:
 
 =head2 Record methods
 
@@ -171,7 +171,7 @@ C<SVN::Dump> provides the following gourps of methods:
 
 =item new()
 
-Create a new empty C<SVN::Dump::Record> object.
+Create a new empty SVN::Dump::Record object.
 
 =item type()
 
@@ -197,7 +197,8 @@ Get the value of property C<$p>.
 
 =item delete_property( @k )
 
-Delete the
+Delete the properties named in C<@p>. Properties
+that do not exist in the record will be silently ignored.
 
 =item set_text( $t )
 
@@ -211,8 +212,8 @@ Get the value of the text block.
 
 =head2 Inner blocks manipulation
 
-A C<SVN::Dump::Record> is composed of several inner blocks of various kinds:
-C<SVN::Dump::Headers>, C<SVN::Dump::Property> and C<SVN::Dump::Text>.
+A SVN::Dump::Record is composed of several inner blocks of various kinds:
+L<SVN::Dump::Headers>, L<SVN::Dump::Property> and L<SVN::Dump::Text>.
 
 The following methods provide access to these blocks:
 
@@ -222,25 +223,25 @@ The following methods provide access to these blocks:
 
 =item get_headers_block()
 
-Get or set the C<SVN::Dump::Headers> object that represents the record
+Get or set the L<SVN::Dump::Headers> object that represents the record
 headers.
 
 =item set_property_block( $property )
 
 =item get_property_block()
 
-Get or set the C<SVN::Dump::Property> object that represents the record
+Get or set the L<SVN::Dump::Property> object that represents the record
 property block.
 
 =item delete_property( @keys )
 
-Delete the given properties. Behave like the builtin C<delete()>.
+Delete the given properties. Behaves like the builtin C<delete()>.
 
 =item set_text_block( $text )
 
 =item get_text_block()
 
-Get or set the C<SVN::Dump::Text> object that represents the record
+Get or set the L<SVN::Dump::Text> object that represents the record
 text block.
 
 =item set_included_record( $record )
@@ -321,19 +322,20 @@ Return the length of the text block.
 
 =item as_string()
 
-Return a string representation of the record.
+Return a string representation of the record that will be
+understood by other Subversion tools, such as C<svnadmin>.
 
-B<Warning:> dumping a record currenly gives back the information that
-was read from the original dump. Which means that if you modified the
-property or text block of a record, the headers will be inconstent.
+B<Warning:> dumping a record currently returns the information that
+was read from the original dump. This means that if you modified the
+property or text block of a record, the headers will be inconsistent.
 
 =back
 
 =head1 ENCAPSULATION
 
-When using C<SVN::Dump> to manipulate a SVN dump, one should not
-directly access the C<SVN::Dump::Headers>, C<SVN::Dump::Property> and
-C<SVN::Dump::Text> components of a C<SVN::Dump::Record> object, but use
+When using L<SVN::Dump> to manipulate a SVN dump, one should not
+access the L<SVN::Dump::Headers>, L<SVN::Dump::Property> and
+L<SVN::Dump::Text> components of a L<SVN::Dump::Record> object directly, but use
 the appropriate C<set_...()> and C<get_...()> methods of the record object.
 
 These methods compute the appropriate modifications of the header values,
@@ -342,11 +344,12 @@ any modification of the record.
 
 =head1 SEE ALSO
 
-C<SVN::Dump::Headers>, C<SVN::Dump::Property>, C<SVN::Dump::Text>.
+L<SVN::Dump>, L<SVN::Dump::Reader>,
+L<SVN::Dump::Headers>, L<SVN::Dump::Property>, L<SVN::Dump::Text>.
 
 =head1 COPYRIGHT
 
-Copyright 2006-2011 Philippe 'BooK' Bruhat, All Rights Reserved.
+Copyright 2006-2013 Philippe Bruhat (BooK), All Rights Reserved.
 
 =head1 LICENSE
 
@@ -354,4 +357,3 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-
